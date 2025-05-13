@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
+import os
 
 class Flatten(nn.Module):
 
@@ -51,8 +51,9 @@ class PNet(nn.Module):
 
         self.conv4_1 = nn.Conv2d(32, 2, 1, 1)
         self.conv4_2 = nn.Conv2d(32, 4, 1, 1)
+        weights = np.load(os.path.join('', 'mtcnn/weights/pnet.npy'), allow_pickle=True)[()]
 
-        weights = np.load('mtcnn/weights/pnet.npy')[()]
+        # weights = np.load('../mtcnn/weights/pnet.npy')[()]
         for n, p in self.named_parameters():
             p.data = torch.FloatTensor(weights[n])
 
@@ -95,8 +96,9 @@ class RNet(nn.Module):
 
         self.conv5_1 = nn.Linear(128, 2)
         self.conv5_2 = nn.Linear(128, 4)
+        weights = np.load(os.path.join('', 'mtcnn/weights/rnet.npy'), allow_pickle=True)[()]
 
-        weights = np.load('mtcnn/weights/rnet.npy')[()]
+        # weights = np.load('../mtcnn/weights/rnet.npy')[()]
         for n, p in self.named_parameters():
             p.data = torch.FloatTensor(weights[n])
 
@@ -145,8 +147,9 @@ class ONet(nn.Module):
         self.conv6_1 = nn.Linear(256, 2)
         self.conv6_2 = nn.Linear(256, 4)
         self.conv6_3 = nn.Linear(256, 10)
+        weights = np.load(os.path.join('', 'mtcnn/weights/onet.npy'), allow_pickle=True)[()]
 
-        weights = np.load('mtcnn/weights/onet.npy')[()]
+        # weights = np.load('../mtcnn/weights/onet.npy')[()]
         for n, p in self.named_parameters():
             p.data = torch.FloatTensor(weights[n])
 

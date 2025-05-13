@@ -296,5 +296,6 @@ class ArcMarginModel(nn.Module):
 
 if __name__ == "__main__":
     args = parse_args()
-    model = resnet152(args).to(device)
+    # model = resnet152(args).to(device)
+    model = resnet152(args).cuda()
     summary(model, (3, 112, 112))

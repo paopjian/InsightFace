@@ -71,14 +71,18 @@ def train_net(args):
         optimizer = checkpoint['optimizer']
 
     # Move to GPU, if available
-    model = model.to(device)
-    metric_fc = metric_fc.to(device)
+    # model = model.to(device)
+    # metric_fc = metric_fc.to(device)
+    model = model.cuda()
+    metric_fc = metric_fc.cuda()
 
     # Loss function
     if args.focal_loss:
-        criterion = FocalLoss(gamma=args.gamma).to(device)
+        # criterion = FocalLoss(gamma=args.gamma).to(device)
+        criterion = FocalLoss(gamma=args.gamma).cuda
     else:
-        criterion = nn.CrossEntropyLoss().to(device)
+        # criterion = nn.CrossEntropyLoss().to(device)
+        criterion = nn.CrossEntropyLoss().cuda()
 
     # Custom dataloaders
     train_dataset = ArcFaceDataset('train')
@@ -90,12 +94,12 @@ def train_net(args):
 
     # Epochs
     for epoch in range(start_epoch, args.end_epoch):
-        scheduler.step()
+        # scheduler.step()
 
-        if args.full_log:
-            lfw_acc, threshold = lfw_test(model)
-            writer.add_scalar('LFW Accuracy', lfw_acc, epoch)
-            full_log(epoch)
+        # if args.full_log:
+        #     lfw_acc, threshold = lfw_test(model)
+        #     writer.add_scalar('LFW Accuracy', lfw_acc, epoch)
+        #     full_log(epoch)
 
         start = datetime.now()
         # One epoch's training
@@ -105,6 +109,7 @@ def train_net(args):
                                             criterion=criterion,
                                             optimizer=optimizer,
                                             epoch=epoch)
+        scheduler.step()
         # train_dataset.shuffle()
         writer.add_scalar('Train Loss', train_loss, epoch)
         writer.add_scalar('Train Top5 Accuracy', train_top5_accs, epoch)
@@ -146,8 +151,10 @@ def train(train_loader, model, metric_fc, criterion, optimizer, epoch):
     # Batches
     for i, (img, label) in enumerate(train_loader):
         # Move to GPU, if available
-        img = img.to(device)
-        label = label.to(device)  # [N, 1]
+        # img = img.to(device)
+        # label = label.to(device)  # [N, 1]
+        img = img.cuda()
+        label = label.cuda()  # [N, 1]
 
         # Forward prop.
         feature = model(img)  # embedding => [N, 512]

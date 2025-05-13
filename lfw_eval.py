@@ -69,7 +69,8 @@ def get_image(samples, transformer, file):
     img = align_face(full_path, landmarks)
     img = transforms.ToPILImage()(img)
     img = transformer(img)
-    img = img.to(device)
+    # img = img.to(device)
+    img = img.cuda()
     return img
 
 
@@ -280,9 +281,9 @@ def lfw_test(model):
         print('Extracting {}...'.format(filename))
         extract(filename)
 
-    # if not os.path.isfile(lfw_pickle):
-    print('Processing {}...'.format(lfw_pickle))
-    process()
+    if not os.path.isfile(lfw_pickle):
+        print('Processing {}...'.format(lfw_pickle))
+        process()
 
     # if not os.path.isfile(angles_file):
     print('Evaluating {}...'.format(angles_file))
@@ -301,7 +302,8 @@ if __name__ == "__main__":
     checkpoint = 'BEST_checkpoint.tar'
     checkpoint = torch.load(checkpoint)
     model = checkpoint['model']
-    model = model.to(device)
+    # model = model.to(device)
+    model = model.cuda()
     model.eval()
 
     acc, threshold = lfw_test(model)
