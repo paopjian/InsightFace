@@ -138,10 +138,10 @@ def select_central_face(im_size, bounding_boxes):
     return nearest_index
 
 
-def get_face_all_attributes(full_path):
+def get_face_all_attributes(full_path,models=None):
     try:
         img = Image.open(full_path).convert('RGB')
-        bounding_boxes, landmarks = detect_faces(img)
+        bounding_boxes, landmarks = detect_faces(img, models = models)
 
         if len(landmarks) > 0:
             i = select_central_face(img.size, bounding_boxes)
@@ -149,7 +149,8 @@ def get_face_all_attributes(full_path):
 
     except KeyboardInterrupt:
         raise
-    except:
+    except Exception as e:
+        print(e)
         pass
     return False, None, None
 

@@ -8,10 +8,19 @@ from mtcnn.models import PNet, RNet, ONet
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+def get_model():
+    with torch.no_grad():
+        pnet = PNet().cuda()
+        rnet = RNet().cuda()
+        onet = ONet().cuda()
+        pnet.eval()
+        rnet.eval()
+        onet.eval()
+        return pnet, rnet, onet
 
 def detect_faces(image, min_face_size=20.0,
                  thresholds=[0.6, 0.7, 0.8],
-                 nms_thresholds=[0.7, 0.7, 0.7]):
+                 nms_thresholds=[0.7, 0.7, 0.7],models=None):
     """
     Arguments:
         image: an instance of PIL.Image.
@@ -28,10 +37,10 @@ def detect_faces(image, min_face_size=20.0,
         # pnet = PNet().to(device)
         # rnet = RNet().to(device)
         # onet = ONet().to(device)
-        pnet = PNet().cuda()
-        rnet = RNet().cuda()
-        onet = ONet().cuda()
-        onet.eval()
+        if(models is None):
+            pnet, rnet, onet = get_model()
+        else:
+            pnet, rnet, onet = models
 
         # BUILD AN IMAGE PYRAMID
         width, height = image.size
