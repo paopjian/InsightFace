@@ -56,7 +56,7 @@ class PNet(nn.Module):
         self.conv4_1 = nn.Conv2d(32, 2, 1, 1)
         self.conv4_2 = nn.Conv2d(32, 4, 1, 1)
 
-        weights = np.load(os.path.join('J:\InsightFace', 'mtcnn/weights/pnet.npy'), allow_pickle=True)[()]
+        weights = np.load(os.path.join('/Users/zkj/PycharmProjects/InsightFace', 'mtcnn/weights/pnet.npy'), allow_pickle=True)[()]
         for n, p in self.named_parameters():
             p.data = torch.FloatTensor(weights[n])
 
@@ -86,13 +86,13 @@ del pnet
 
 pnet = PNet()
 start = time.time()
-pnet.to(torch.device("cuda:0"))
+pnet.to(torch.device("mps"))
 end = time.time()
 print('加载进cuda',end-start, next(pnet.parameters()).device)
 del pnet
 
-pnet = PNet()
-start = time.time()
-pnet.cuda()
-end = time.time()
-print('加载进cuda',end-start, next(pnet.parameters()).device)
+# pnet = PNet()
+# start = time.time()
+# pnet.mps()
+# end = time.time()
+# print('加载进cuda',end-start, next(pnet.parameters()).device)
